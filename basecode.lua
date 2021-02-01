@@ -83,7 +83,11 @@ function getOrientation()
 
 function refuel()
     if turtle.getFuelLevel()<=STEPS then
-        turnAround() --theres always space behind turtle
+        invDump(FIRST_FREE_SLOT) --make sure invetory is empty to accept potential items
+        turnAround() 
+        while (turtle.detect()) do --makes space for chests even if it has to dig mulitiple blocks
+            turtle.dig() 
+        end
         turtle.select(1) -- select lava enderchest
         turtle.place()
         turtle.select(16) -- last slot specially for fuel
@@ -103,6 +107,7 @@ function refuel()
 end
 
 function invDump(first_slot)
+    turnAround()
     while (turtle.detect()) do --makes space for chests even if it has to dig mulitiple blocks
         turtle.dig() 
     end
@@ -114,6 +119,7 @@ function invDump(first_slot)
     end
     turtle.select(3)
     turtle.dig()
+    turnAround()
 end
 
 function moveTo(X,Y,Z)
@@ -148,12 +154,15 @@ rednet.open("right") -- open the wireless modem for communication
  while true do -- puts turtle into a waitloop for a message
     HEADING = getOrientation()
     local id,message = rednet.receive()
-    if message=="exit" then
+    command = {}
+    for word in message:gmatch("%w+") do table.insert(command, word) end
+    if command[1]=="exit" then
         break
-    elseif message =="dump" then
+    elseif command[1] =="dump" then
         invDump(FIRST_FREE_SLOT) 
-    elseif message=="checkFuel" then
-        invDump(FIRST_FREE_SLOT) --make sure invetory is empty to accept potential items
+    elseif command[1]=="checkFuel" then
         refuel()
+    elseif command[1]=="moveTo" then
+        moveTo(command[2],command[3],command[4])
     end
 end
