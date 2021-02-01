@@ -33,7 +33,7 @@ function refuel()
     end
     turtle.select(3)
     turtle.placeUp()
-    for i=first_slot,TOTAL_SLOTS,1 do
+    for i=TOTAL_SLOTS,first_slot,-1 do
         turtle.select(i)
         turtle.dropUp()
     end
