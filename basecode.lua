@@ -7,7 +7,7 @@ TOTAL_SLOTS=16
 
 function refuel()
     if turtle.getFuelLevel()==0 then
-        while (not turtle.placeUp()) do --makes space for chests even if it has to dig mulitiple blocks
+        while (turtle.detectUp()) do --makes space for chests even if it has to dig mulitiple blocks
             turtle.digUp() 
         end
         turtle.select(1) -- select lava enderchest
@@ -28,7 +28,7 @@ function refuel()
  end
 
  function invDump(first_slot)
-    while (not turtle.placeUp()) do --makes space for chests even if it has to dig mulitiple blocks
+    while (turtle.detectUp()) do --makes space for chests even if it has to dig mulitiple blocks
         turtle.digUp() 
     end
     turtle.select(3)
