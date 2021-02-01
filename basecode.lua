@@ -57,6 +57,7 @@ function move(value)
     for i=value-1,1,-1 do
         turtle.dig()
         forward()
+        print(gps.locate())
     end
 end
 
@@ -131,30 +132,34 @@ function moveTo(X,Y,Z)
     if(currX==X and currY==Y and currZ==Z) then
         print("Already here!")
         return
+
+    else
+         --translate in the X direction
+        if currX~=X then
+            if X>currX and HEADING ~= 2 then
+                makeHeading(2)
+            elseif X<currX and HEADING ~=0 then
+                makeHeading(0)
+            end
+            move(math.abs(X-currX))
+        end
+
+        --translate in the Z direction
+        if currZ~=Z then
+            if Z>currZ and HEADING ~= 3 then
+                makeHeading(3)
+            elseif Z<currZ and HEADING ~=1 then
+                makeHeading(1)
+            end
+            move(math.abs(Z-currZ))
+        end
+        --translate in the Y direction
+        if currY~=Y then
+            moveVertical(Y-currY)
+        end
+        print("done")
     end
-
-    --translate in the X direction
-    if X>currX and HEADING ~= 2 then
-        makeHeading(2)
-    elseif X<currX and HEADING ~=0 then
-        makeHeading(0)
-    end
-    move(math.abs(X-currX))
-
-    --translate in the Z direction
-    if Z>currZ and HEADING ~= 3 then
-        makeHeading(3)
-    elseif Z<currZ and HEADING ~=1 then
-        makeHeading(1)
-    end
-    move(math.abs(Z-currZ))
-
-    --translate in the Y direction
-    moveVertical(Y-currY)
-
-    print("now at %d %d %d",gps.locate())
 end
-
 --[[
     The main loop of the turtle's functionality. It will start and then wait for a command via
     rednet broadcast
