@@ -54,7 +54,7 @@ end
 
 function move(value)
     checkFuel()
-    for i=value-1,1,-1 do
+    for i=value,0,-1 do
         turtle.dig()
         forward()
         print(gps.locate())
