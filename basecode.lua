@@ -4,11 +4,13 @@ FIRST_FREE_SLOT = 4 --marks the first slot in the inventory
 TOTAL_SLOTS = 16
 
 HOME_X,HOME_Y,HOME_Z = gps.locate()     --uses the pre-existing gps hosts to get position through trilateration
+CURRX,CURRY,CURRZ=0,0,0
 HEADING = 0           
 STEPS = 0  --count for total steeps since last refuel
 
 function forward()
     turtle.forward()
+    CURRX,CURRY,CURRZ =  gps.locate()
     STEPS=STEPS+1
 end
 
@@ -57,7 +59,6 @@ function move(value)
     for i=value,0,-1 do
         turtle.dig()
         forward()
-        print(gps.locate())
     end
 end
 
@@ -129,14 +130,13 @@ function invDump(first_slot)
 end
 
 function moveTo(X,Y,Z)
-    local currX,currY,currZ=gps.locate()
     
-    if(currX==X and currY==Y and currZ==Z) then
+    if(CURRX==X and CURRY==Y and CURRZ==Z) then
         print("Already here!")
         return
 
     else
-        while currX~=X or currY~=Y or currZ~=Z do
+        while CURRX~=X or CURRY~=Y or CURRZ~=Z do
             local currX,currY,currZ=gps.locate()
             --translate in the X direction
             if currX~=X then
@@ -149,17 +149,17 @@ function moveTo(X,Y,Z)
             end
 
             --translate in the Z direction
-            if currZ~=Z then
-                if Z>currZ and HEADING ~= 3 then
+            if CURRZ~=Z then
+                if Z>CURRZ and HEADING ~= 3 then
                     makeHeading(3)
-                elseif Z<currZ and HEADING ~=1 then
+                elseif Z<CURRZ and HEADING ~=1 then
                     makeHeading(1)
                 end
                 move(math.abs(Z-currZ))
             end
             --translate in the Y direction
-            if currY~=Y then
-                moveVertical(Y-currY)
+            if CURRY~=Y then
+                moveVertical(Y-CURRY)
             end
             print("done")
         end
