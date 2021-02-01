@@ -7,38 +7,38 @@ TOTAL_SLOTS=16
 
 function refuel()
     if turtle.getFuelLevel()==0 then
-        while (turtle.detectUp()) do --makes space for chests even if it has to dig mulitiple blocks
-            turtle.digUp() 
+        while (turtle.detect()) do --makes space for chests even if it has to dig mulitiple blocks
+            turtle.dig() 
         end
         turtle.select(1) -- select lava enderchest
-        turtle.placeUp()
+        turtle.place()
         turtle.select(16) -- last slot specially for fuel
-        turtle.suckUp() --get lava bucket
+        turtle.suck() --get lava bucket
         turtle.refuel()
         turtle.select(1) -- lavachest slot
-        turtle.digUp()
+        turtle.dig()
         turtle.select(2) -- bucket chest slot
-        turtle.placeUp()
+        turtle.place()
         turtle.select(16) --empty bucket
-        turtle.dropUp() --puts bucket in enderchest
+        turtle.drop() --puts bucket in enderchest
         turtle.select(2)
-        turtle.digUp()
+        turtle.dig()
         print(turtle.getFuelLevel())
     end
  end
 
  function invDump(first_slot)
-    while (turtle.detectUp()) do --makes space for chests even if it has to dig mulitiple blocks
-        turtle.digUp() 
+    while (turtle.detect()) do --makes space for chests even if it has to dig mulitiple blocks
+        turtle.dig() 
     end
     turtle.select(3)
-    turtle.placeUp()
+    turtle.place()
     for i=TOTAL_SLOTS,first_slot,-1 do
         turtle.select(i)
-        turtle.dropUp()
+        turtle.drop()
     end
     turtle.select(3)
-    turtle.digUp()
+    turtle.dig()
  end
 
 rednet.open("right") -- open the wireless modem for communication
