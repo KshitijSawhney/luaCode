@@ -5,18 +5,7 @@ FIRST_FREE_SLOT = 4 --marks the first slot in the inventory
 -- here is the breakdown of slots : {1:lava,2:empty buckets,3:items chest,4 to 16 : everything else}
 TOTAL_SLOTS=16
 
-rednet.open("right") -- open the wireless modem for communication
- while true do -- puts turtle into a waitloop for a message
-    local id,message = rednet.receive()
-    if message=="exit" then
-        break
-    elseif message=="checkFuel" then
-        invDump(FIRST_FREE_SLOT) --make sure invetory is empty to accept potential items
-        refuel()
-    end
- end
-
- function refuel()
+function refuel()
     if turtle.getFuelLevel()==0 then
         while (not turtle.placeUp()) do --makes space for chests even if it has to dig mulitiple blocks
             turtle.digUp() 
@@ -50,4 +39,15 @@ rednet.open("right") -- open the wireless modem for communication
     end
     turtle.select(3)
     turtle.digUp()
+ end
+
+rednet.open("right") -- open the wireless modem for communication
+ while true do -- puts turtle into a waitloop for a message
+    local id,message = rednet.receive()
+    if message=="exit" then
+        break
+    elseif message=="checkFuel" then
+        invDump(FIRST_FREE_SLOT) --make sure invetory is empty to accept potential items
+        refuel()
+    end
  end
