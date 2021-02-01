@@ -23,6 +23,7 @@ function turnRight()
 end
 
 function move(value)
+    checkFuel()
     for i=value-1,1,-1 do
         turtle.dig()
         forward()
@@ -125,6 +126,11 @@ end
 function moveTo(X,Y,Z)
     local currX,currY,currZ=gps.locate()
     
+    if(currX==X and currY==Y and currZ==Z) then
+        print("Already here!")
+        return
+    end
+
     --translate in the X direction
     if X>currX and HEADING ~= 2 then
         makeHeading(2)
@@ -143,6 +149,8 @@ function moveTo(X,Y,Z)
 
     --translate in the Y direction
     moveVertical(Y-currY)
+
+    print("now at %d %d %d",gps.locate())
 end
 
 --[[
