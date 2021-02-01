@@ -91,9 +91,11 @@ function getOrientation()
     loc1 = vector.new(gps.locate(2, false))
     if not turtle.forward() then
         for j=1,6 do
-                if not turtle.forward() then
-                        turtle.dig()
-             else break end
+            if not turtle.forward() then
+                turtle.dig()
+            else
+                break
+            end
         end
     end
     loc2 = vector.new(gps.locate(2, false))
@@ -134,32 +136,36 @@ function moveTo(X,Y,Z)
         return
 
     else
-         --translate in the X direction
-        if currX~=X then
-            if X>currX and HEADING ~= 2 then
-                makeHeading(2)
-            elseif X<currX and HEADING ~=0 then
-                makeHeading(0)
+        while currX~=X or currY~=Y or currZ~=Z do
+            local currX,currY,currZ=gps.locate()
+            --translate in the X direction
+            if currX~=X then
+                if X>currX and HEADING ~= 2 then
+                    makeHeading(2)
+                elseif X<currX and HEADING ~=0 then
+                    makeHeading(0)
+                end
+                move(math.abs(X-currX))
             end
-            move(math.abs(X-currX))
-        end
 
-        --translate in the Z direction
-        if currZ~=Z then
-            if Z>currZ and HEADING ~= 3 then
-                makeHeading(3)
-            elseif Z<currZ and HEADING ~=1 then
-                makeHeading(1)
+            --translate in the Z direction
+            if currZ~=Z then
+                if Z>currZ and HEADING ~= 3 then
+                    makeHeading(3)
+                elseif Z<currZ and HEADING ~=1 then
+                    makeHeading(1)
+                end
+                move(math.abs(Z-currZ))
             end
-            move(math.abs(Z-currZ))
+            --translate in the Y direction
+            if currY~=Y then
+                moveVertical(Y-currY)
+            end
+            print("done")
         end
-        --translate in the Y direction
-        if currY~=Y then
-            moveVertical(Y-currY)
-        end
-        print("done")
     end
 end
+
 --[[
     The main loop of the turtle's functionality. It will start and then wait for a command via
     rednet broadcast
