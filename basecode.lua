@@ -31,13 +31,13 @@ end
 
 function moveVertical(value)
     if value < 0 then
-        for i=math.abs(value)-1,1,-1 do
+        for i=math.abs(value),1,-1 do
             turtle.digDown()
             turtle.down()
             STEPS=STEPS+1
         end
     else
-        for i=value-1,1,-1 do
+        for i=value,1,-1 do
             turtle.digUp()
             turtle.up()
             STEPS=STEPS+1
@@ -124,7 +124,7 @@ end
 
 function moveTo(X,Y,Z)
     local currX,currY,currZ=gps.locate()
-
+    
     --translate in the X direction
     if X>currX and HEADING ~= 2 then
         makeHeading(2)
