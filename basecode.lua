@@ -44,7 +44,10 @@ rednet.open("right") -- open the wireless modem for communication
     end
     turtle.select(3)
     turtle.placeUp()
-     for i=first_slot,TOTAL_SLOTS,1 do
-         turtle.dropUp()
-     end
+    for i=first_slot,TOTAL_SLOTS,1 do
+        turtle.select(i)
+        turtle.dropUp()
+    end
+    turtle.select(3)
+    turtle.digUp()
  end
