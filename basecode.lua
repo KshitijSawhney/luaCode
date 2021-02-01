@@ -22,6 +22,36 @@ function turnRight()
     turtle.turnRight()
 end
 
+function turnAround()
+    turnRight()
+    turnRight()
+end
+
+function checkFuel()
+    if turtle.getFuelLevel()<=STEPS then
+        invDump(FIRST_FREE_SLOT) --make sure invetory is empty to accept potential items
+        turnAround() 
+        while (turtle.detect()) do --makes space for chests even if it has to dig mulitiple blocks
+            turtle.dig() 
+        end
+        turtle.select(1) -- select lava enderchest
+        turtle.place()
+        turtle.select(16) -- last slot specially for fuel
+        turtle.suck() --get lava bucket
+        turtle.refuel()
+        turtle.select(1) -- lavachest slot
+        turtle.dig()
+        turtle.select(2) -- bucket chest slot
+        turtle.place()
+        turtle.select(16) --empty bucket
+        turtle.drop() --puts bucket in enderchest
+        turtle.select(2)
+        turtle.dig()
+        turnAround()
+        print(turtle.getFuelLevel())
+    end
+end
+
 function move(value)
     checkFuel()
     for i=value-1,1,-1 do
@@ -44,11 +74,6 @@ function moveVertical(value)
             STEPS=STEPS+1
         end
     end
-end
-
-function turnAround()
-    turnRight()
-    turnRight()
 end
 
 function makeHeading(target)
@@ -82,30 +107,7 @@ function getOrientation()
     +z = 3  (SOUTH)
     --]]
 
-function refuel()
-    if turtle.getFuelLevel()<=STEPS then
-        invDump(FIRST_FREE_SLOT) --make sure invetory is empty to accept potential items
-        turnAround() 
-        while (turtle.detect()) do --makes space for chests even if it has to dig mulitiple blocks
-            turtle.dig() 
-        end
-        turtle.select(1) -- select lava enderchest
-        turtle.place()
-        turtle.select(16) -- last slot specially for fuel
-        turtle.suck() --get lava bucket
-        turtle.refuel()
-        turtle.select(1) -- lavachest slot
-        turtle.dig()
-        turtle.select(2) -- bucket chest slot
-        turtle.place()
-        turtle.select(16) --empty bucket
-        turtle.drop() --puts bucket in enderchest
-        turtle.select(2)
-        turtle.dig()
-        turnAround()
-        print(turtle.getFuelLevel())
-    end
-end
+
 
 function invDump(first_slot)
     turnAround()
@@ -169,7 +171,7 @@ rednet.open("right") -- open the wireless modem for communication
     elseif command[1] =="dump" then
         invDump(FIRST_FREE_SLOT) 
     elseif command[1]=="checkFuel" then
-        refuel()
+        checkFuel()
     elseif command[1]=="moveTo" then
         moveTo(tonumber(command[2]),tonumber(command[3]),tonumber(command[4]))
     end
