@@ -163,6 +163,6 @@ rednet.open("right") -- open the wireless modem for communication
     elseif command[1]=="checkFuel" then
         refuel()
     elseif command[1]=="moveTo" then
-        moveTo(command[2],command[3],command[4])
+        moveTo(tonumber(command[2]),tonumber(command[3]),tonumber(command[4]))
     end
 end
