@@ -5,6 +5,6 @@ rednet.open("right") -- open the wireless modem for communication
     if message=="exit" then
         break
     elseif message=="checkFuel" then
-        shell.run(refuel)
+        dofile('refuel.lua')
     end
  end
