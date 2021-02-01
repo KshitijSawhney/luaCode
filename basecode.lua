@@ -46,6 +46,8 @@ rednet.open("right") -- open the wireless modem for communication
     local id,message = rednet.receive()
     if message=="exit" then
         break
+    elseif message =="dump" then
+        invDump(FIRST_FREE_SLOT) 
     elseif message=="checkFuel" then
         invDump(FIRST_FREE_SLOT) --make sure invetory is empty to accept potential items
         refuel()
