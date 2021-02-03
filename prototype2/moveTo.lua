@@ -44,7 +44,7 @@ function move(value)
         forward()
     end
 end
-
+------------------------------------------------------
 X,Y,Z=tonumber(arg[2]),tonumber(arg[3]),tonumber(arg[4])
 
 if(CURRX == X and CURRY == Y and CURRZ == Z) then
