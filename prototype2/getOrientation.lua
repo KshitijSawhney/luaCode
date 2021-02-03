@@ -1,4 +1,4 @@
-require("globalVars")
+require("programs/globalVars")
 
 loc1 = vector.new(gps.locate(2, false))
 if not turtle.forward() then

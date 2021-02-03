@@ -1,4 +1,4 @@
-require("globalVars")
+require("programs/globalVars")
 
 if FUEL<=STEPS then
     shell.run("invDump "+ tostring(FIRST_FREE_SLOT)) --make sure invetory is empty to accept potential items
