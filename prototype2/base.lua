@@ -2,11 +2,11 @@
 This makes updating mulitple files considerably easier]]
 shell.run("delete programs/") --remove old files
 shell.run("mkdir programs")
-shell.run("pastebin get <code> programs/globals")
-shell.run("pastebin get <code> programs/checkFuel")
-shell.run("pastebin get <code> programs/getOrientation")
-shell.run("pastebin get <code> programs/moveTo")
-shell.run("pastebin get <code> programs/invDump")
+shell.run("pastebin get JjRjXtFx programs/globals")
+shell.run("pastebin get Kr8ZnHsP programs/checkFuel")
+shell.run("pastebin get JHfcc6z0 programs/getOrientation")
+shell.run("pastebin get kyPga1Ft programs/moveTo")
+shell.run("pastebin get UmEW50gL programs/invDump")
 
 require("globals")
 
