@@ -8,7 +8,7 @@ shell.run("pastebin get JHfcc6z0 programs/getOrientation")
 shell.run("pastebin get kyPga1Ft programs/moveTo")
 shell.run("pastebin get UmEW50gL programs/invDump")
 
-require("globals")
+require("globalVars")
 
 rednet.open("right") -- open the wireless modem for communication
  while true do -- puts turtle into a waitloop for a message
