@@ -6,7 +6,7 @@ TOTAL_SLOTS = 16
 HOME_X,HOME_Y,HOME_Z = gps.locate()     --uses the pre-existing gps hosts to get position through trilateration
 CURRX,CURRY,CURRZ=0,0,0
 HEADING = 0           
-STEPS = 0  --count for total steeps since last refuel
+STEPS = 0  --count for total steps since last refuel
 
 function forward()
     turtle.forward()
