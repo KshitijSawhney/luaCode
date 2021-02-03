@@ -7,8 +7,8 @@ The code works for the most part, but some parts can be better optimized:
     forth if asked to move to the blobk it is present at.
 
 For future iterations:
-    -it makes more sense to split apart files based on use, and use shell.run()
-    commands with corresponding arguments.
+    -it makes more sense to use commands with corresponding 
+    arguments and use #args.
 
 nice-to-haves:
     -ability to deploy turtles remotely,
