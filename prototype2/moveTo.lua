@@ -1,4 +1,4 @@
-require("globals")
+require("globalVars")
 
 function forward()
     CURRX,CURRY,CURRZ =  gps.locate()
