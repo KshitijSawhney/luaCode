@@ -1,4 +1,4 @@
-require("globals")
+require("globalVars")
 turnAround()
 while (turtle.detect()) do --makes space for chests even if it has to dig mulitiple blocks
     turtle.dig() 
