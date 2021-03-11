@@ -101,6 +101,7 @@ function getOrientation()
     end
     loc2 = vector.new(gps.locate(2, false))
     local heading = loc2 - loc1
+
     return ((heading.x + math.abs(heading.x) * 2) + (heading.z + math.abs(heading.z) * 3))-1
     end
 
@@ -169,8 +170,11 @@ end
 ]]
 
 rednet.open("right") -- open the wireless modem for communication
+HEADING = getOrientation()
+turtle.turnAround()
+turtle.forward()
+turtle.turnAround()
  while true do -- puts turtle into a waitloop for a message
-    HEADING = getOrientation()
     local id,message = rednet.receive()
     command = {}
     for word in message:gmatch("%w+") do table.insert(command, word) end
