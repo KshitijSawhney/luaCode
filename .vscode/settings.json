@@ -1,0 +1,10 @@
+{
+    "Lua.diagnostics.globals": [
+        "gps",
+        "gps",
+        "turtle"
+    ],
+    "Lua.diagnostics.disable": [
+        "undefined-global"
+    ]
+}
