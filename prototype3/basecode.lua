@@ -171,9 +171,9 @@ end
 
 rednet.open("right") -- open the wireless modem for communication
 HEADING = getOrientation()
-turtle.turnAround()
-turtle.forward()
-turtle.turnAround()
+turnAround()
+forward()
+turnAround()
  while true do -- puts turtle into a waitloop for a message
     local id,message = rednet.receive()
     command = {}
