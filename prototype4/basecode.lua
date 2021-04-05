@@ -2,7 +2,8 @@
 FIRST_FREE_SLOT = 4 --marks the first slot in the inventory
 -- here is the breakdown of slots : {1:lava,2:empty buckets,3:items chest,4 to 16 : everything else}
 TOTAL_SLOTS = 16
-
+TUNNEL_START = {143,70,555}
+TUNNEL_END = {143,70,537}
 CURRX,CURRY,CURRZ=_,_,_
 HEADING = 0           
 STEPS = 0  --count for total steps since last refuel
@@ -174,6 +175,12 @@ function moveTo(X,Y,Z)
     end
 end
 
+function selfRemove()
+    moveTo(TUNNEL_START)
+    moveTo(TUNNEL_END)
+    rednet.broadcast("master remove")
+end
+
 function mine( x1,y1,z1,x2,y2,z2 )
     --cannot dig below y=1 as y=0 is bedrock
     if y1<1 then y1=1
@@ -214,6 +221,8 @@ function mine( x1,y1,z1,x2,y2,z2 )
             moveVertical(-1)
         end
     end
+    moveTo(math.min(x1,x2),math.max(y1,y2),math.min(z1,z2)) --go back to top-northwest corner
+    selfRemove()
 end
 
 --[[
@@ -232,8 +241,6 @@ checkFuel()
 
 rednet.open("right") -- open the wireless modem for communication
 rednet.broadcast("added")
-
-HOME_X,HOME_Y,HOME_Z = gps.locate()     --uses the pre-existing gps hosts to get position through trilateration
 
 HEADING = getOrientation()
 back()

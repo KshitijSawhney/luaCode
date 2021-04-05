@@ -19,7 +19,10 @@ function addTurtle()
     rednet.broadcast(id,"moveTo 143 70 555")
 end
 
-
+function removeTurtle(id)
+    turtle.dig()
+    table.remove(network, tablefind(network, id))    
+end
 
 --[[mainloop for master]]
 while true do
@@ -33,8 +36,7 @@ while true do
         elseif command[1]=="add" then
             addTurtle()
         elseif command[1]=="remove" then
-            turtle.dig()
-            table.remove(network, tablefind(network, id))
+            removeTurtle(id)
         elseif command[1]=="quarry" then
             quarry(tonumber(command[2]),tonumber(command[3]),tonumber(command[4]),tonumber(command[5]),tonumber(command[6]),tonumber(command[7]))
         end
