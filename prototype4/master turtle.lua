@@ -1,6 +1,14 @@
 network={}
 rednet.open("right")
 
+function tablefind(tab,el)
+    for index, value in pairs(tab) do
+        if value == el then
+            return index
+        end
+    end
+end
+
 function addTurtle()
     turtle.suckUp()
     turtle.place()
@@ -26,6 +34,7 @@ while true do
             addTurtle()
         elseif command[1]=="remove" then
             turtle.dig()
+            table.remove(network, tablefind(network, id))
         elseif command[1]=="quarry" then
             quarry(tonumber(command[2]),tonumber(command[3]),tonumber(command[4]),tonumber(command[5]),tonumber(command[6]),tonumber(command[7]))
         end

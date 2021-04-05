@@ -140,7 +140,8 @@ function invDump(first_slot)
     turnAround()
 end
 
-function moveTo(X,Y,Z)    
+function moveTo(X,Y,Z)
+    CURRX,CURRY,CURRZ=gps.locate()
     if(CURRX==X and CURRY==Y and CURRZ==Z) then
         print("Already here!")
         return
@@ -188,26 +189,30 @@ function mine( x1,y1,z1,x2,y2,z2 )
 
     --how much to dig in each direction
     local xdist,ydist,zdist=math.abs(x1-x2),math.abs(y1-y2),math.abs(z1-z2)
-    for i =1 , ydist do
-        for j=1 , xdist do
-            for k=1 , zdist - 1 do
+    for i =0 , ydist do
+        for j=0 , xdist do
+            for k=1 , zdist do
                 turtle.dig()
                 forward()
             end
-            if j%2==1 then
-                turnLeft()
-                turtle.dig()
-                forward()
-                turnLeft()
-            else
-                turnRight()
-                turtle.dig()
-                forward()
-                turnRight()
+            if j~= xdist then 
+                if j%2==1 then
+                    turnLeft()
+                    turtle.dig()
+                    forward()
+                    turnLeft()
+                else
+                    turnRight()
+                    turtle.dig()
+                    forward()
+                    turnRight()
+                end
             end
         end
-    turnAround()
-    turtle.digDown()
+        if i ~= ydist then
+            turnAround()
+            moveVertical(-1)
+        end
     end
 end
 
@@ -223,6 +228,7 @@ turtle.turnLeft()
 turtle.turnLeft()
 turtle.suck()
 turtle.turnRight()
+checkFuel()
 
 rednet.open("right") -- open the wireless modem for communication
 rednet.broadcast("added")
@@ -246,7 +252,7 @@ while true do -- puts turtle into a waitloop for a message
         elseif command[1]=="moveTo" then
             moveTo(tonumber(command[2]),tonumber(command[3]),tonumber(command[4]))
         elseif command[1]=="mine" then
-            mine(tonumber(command[2]),tonumber(command[3]),tonumber(command[4]),tonumber(command[5]),tonumber(command[5]),tonumber(command[7]))
+            mine(tonumber(command[2]),tonumber(command[3]),tonumber(command[4]),tonumber(command[5]),tonumber(command[6]),tonumber(command[7]))
         end
     end
 end
