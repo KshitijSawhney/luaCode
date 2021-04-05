@@ -260,6 +260,8 @@ while true do -- puts turtle into a waitloop for a message
             moveTo(tonumber(command[2]),tonumber(command[3]),tonumber(command[4]))
         elseif command[1]=="mine" then
             mine(tonumber(command[2]),tonumber(command[3]),tonumber(command[4]),tonumber(command[5]),tonumber(command[6]),tonumber(command[7]))
+        elseif command[1]=="remove" then
+            selfRemove()
         end
     end
 end
