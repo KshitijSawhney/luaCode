@@ -125,14 +125,14 @@ function getOrientation()
 
 
 
-function invDump(first_slot)
+function invDump()
     turnAround()
     while (turtle.detect()) do --makes space for chests even if it has to dig mulitiple blocks
         turtle.dig() 
     end
     turtle.select(3)
     turtle.place()
-    for i=TOTAL_SLOTS,first_slot,-1 do
+    for i=TOTAL_SLOTS,FIRST_FREE_SLOT,-1 do
         turtle.select(i)
         turtle.drop()
     end
@@ -176,8 +176,8 @@ function moveTo(X,Y,Z)
 end
 
 function selfRemove()
-    moveTo(TUNNEL_START)
-    moveTo(TUNNEL_END)
+    moveTo(TUNNEL_START[1],TUNNEL_START[2],TUNNEL_START[3])
+    moveTo(TUNNEL_END[1],TUNNEL_END[2],TUNNEL_END[3])
     rednet.broadcast("master remove")
 end
 
@@ -221,7 +221,8 @@ function mine( x1,y1,z1,x2,y2,z2 )
             moveVertical(-1)
         end
     end
-    moveTo(math.min(x1,x2),math.max(y1,y2),math.min(z1,z2)) --go back to top-northwest corner
+    moveTo(math.min(x1,x2),math.max(y1,y2)+1,math.min(z1,z2)) --go back to top+1-northwest corner
+    invDump()
     selfRemove()
 end
 
@@ -230,20 +231,23 @@ end
     rednet broadcast
 ]]
 
-turtle.suckDown()
+turtle.suckDown(1)
 turtle.turnRight()
-turtle.suck()
+turtle.suck(1)
 turtle.turnLeft()
 turtle.turnLeft()
-turtle.suck()
+turtle.suck(1)
 turtle.turnRight()
 checkFuel()
 
 rednet.open("right") -- open the wireless modem for communication
-rednet.broadcast("added")
 
 HEADING = getOrientation()
 back()
+
+rednet.broadcast("added")
+
+
 while true do -- puts turtle into a waitloop for a message
     local _,message = rednet.receive()
     command = {}
@@ -253,7 +257,7 @@ while true do -- puts turtle into a waitloop for a message
         if command[1]=="exit" then
             break
         elseif command[1] =="dump" then
-            invDump(FIRST_FREE_SLOT) 
+            invDump() 
         elseif command[1]=="checkFuel" then
             checkFuel()
         elseif command[1]=="moveTo" then
