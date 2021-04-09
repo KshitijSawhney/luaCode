@@ -39,24 +39,22 @@ end
 
 function refuel()
     invDump(FIRST_FREE_SLOT) --make sure invetory is empty to accept potential items
-    turnAround() 
-    while (turtle.detect()) do --makes space for chests even if it has to dig mulitiple blocks
-        turtle.dig() 
+    while (turtle.detectUp()) do --makes space for chests even if it has to dig mulitiple blocks
+        turtle.digUp() 
     end
     turtle.select(1) -- select lava enderchest
-    turtle.place()
+    turtle.placeUp()
     turtle.select(16) -- last slot specially for fuel
-    turtle.suck() --get lava bucket
+    turtle.suckUp() --get lava bucket
     turtle.refuel()
     turtle.select(1) -- lavachest slot
-    turtle.dig()
+    turtle.digUp()
     turtle.select(2) -- bucket chest slot
-    turtle.place()
+    turtle.placeUp()
     turtle.select(16) --empty bucket
-    turtle.drop() --puts bucket in enderchest
+    turtle.dropUp() --puts bucket in enderchest
     turtle.select(2)
-    turtle.dig()
-    turnAround()
+    turtle.digUp()
 end
 
 function checkFuel()
