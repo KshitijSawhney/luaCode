@@ -124,19 +124,17 @@ function getOrientation()
 
 
 function invDump()
-    turnAround()
-    while (turtle.detect()) do --makes space for chests even if it has to dig mulitiple blocks
-        turtle.dig() 
+    while (turtle.detectUp()) do --makes space for chests even if it has to dig mulitiple blocks
+        turtle.digUp() 
     end
     turtle.select(3)
-    turtle.place()
+    turtle.placeUp()
     for i=TOTAL_SLOTS,FIRST_FREE_SLOT,-1 do
         turtle.select(i)
-        turtle.drop()
+        turtle.dropUp()
     end
     turtle.select(3)
-    turtle.dig()
-    turnAround()
+    turtle.digUp()
 end
 
 function moveTo(X,Y,Z)
@@ -173,6 +171,9 @@ function moveTo(X,Y,Z)
     end
 end
 
+function tunnel(start_point, end_point )
+    -- body
+end
 function selfRemove()
     moveTo(TUNNEL_START[1],TUNNEL_START[2],TUNNEL_START[3])
     moveTo(TUNNEL_END[1],TUNNEL_END[2],TUNNEL_END[3])
@@ -189,8 +190,8 @@ function mine( x1,y1,z1,x2,y2,z2 )
 
     local targetX,targetY,targetZ=math.max(x1,x2),math.min(y1,y2),math.max(z1,z2)
 
-    --facing EAST
-    makeHeading(2)
+    --facing SOUTH
+    makeHeading(3)
 
     --how much to dig in each direction
     local xdist,ydist,zdist=math.abs(x1-x2),math.abs(y1-y2),math.abs(z1-z2)
@@ -202,15 +203,15 @@ function mine( x1,y1,z1,x2,y2,z2 )
             end
             if j~= xdist then 
                 if j%2==1 then
-                    turnLeft()
+                    turnRight()
                     turtle.dig()
                     forward()
-                    turnLeft()
+                    turnRight()
                 else
-                    turnRight()
+                    turnLeft()
                     turtle.dig()
                     forward()
-                    turnRight()
+                    turnLeft()
                 end
             end
         end
