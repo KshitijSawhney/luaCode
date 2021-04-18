@@ -8,8 +8,11 @@ CURRX,CURRY,CURRZ=_,_,_
 HEADING = 0           
 STEPS = 0  --count for total steps since last refuel
 
+VISITED={}
+
 function forward()
     checkFuel()
+    checkFullInv()
     turtle.forward()
     CURRX,CURRY,CURRZ =  gps.locate()
     STEPS=STEPS+1
@@ -17,6 +20,7 @@ end
 
 function back()
     checkFuel()
+    checkFullInv()
     turtle.back()
     CURRX,CURRY,CURRZ =  gps.locate()
     STEPS=STEPS+1
@@ -38,7 +42,7 @@ function turnAround()
 end
 
 function refuel()
-    invDump(FIRST_FREE_SLOT) --make sure invetory is empty to accept potential items
+    checkFullInv() --make sure invetory is empty to accept potential items
     while (turtle.detectUp()) do --makes space for chests even if it has to dig mulitiple blocks
         turtle.digUp() 
     end
@@ -63,7 +67,14 @@ function checkFuel()
     end
 end
 
+function checkFullInv()
+    if turtle.getItemDetail(16) ~= nil then
+        invDump()
+    end    
+end
+
 function move(value)
+    checkFullInv()
     checkFuel()
     for i=value,1,-1 do
         turtle.dig()
@@ -96,6 +107,7 @@ function makeHeading(target)
         end
     end
 end
+
 
 function getOrientation()
     loc1 = vector.new(gps.locate(2, false))
@@ -171,9 +183,124 @@ function moveTo(X,Y,Z)
     end
 end
 
-function tunnel(start_point, end_point )
-    -- body
+function inspect(direction)
+    local s,data
+    if direction=="F" then
+        s,data = turtle.inspect()
+    elseif direction=="U" then
+        s,data = turtle.inspectUp()
+    elseif direction=="D" then
+        s,data = turtle.inspectDown()
+    elseif direction=="L" then
+        turnLeft()
+        s,data = turtle.inspect()
+    elseif direction=="R" then
+        turnRight()
+        s,data = turtle.inspect()
+    elseif direction=="B" then
+        turnAround()
+        s,data = turtle.inspect()
+    end
+    if s then
+        os.sleep(0.1)
+        return isOre(data)
+    end
 end
+
+function dfsMiner(vein_start)
+    table.insert( VISITED,{CURRX,CURRY,CURRZ})
+    if inspect("F") ~=true then
+        if inspect("B") ~=true then
+            turnAround()
+            if inspect("U") ~= true  then
+                if inspect("D") ~= true then
+                    if inspect("L") ~= true then
+                        turnRight()
+                        if inspect("R") ~= true then
+                            turnLeft()
+                            moveTo(vein_start[1],vein_start[2],vein_start[3])
+                            return
+                        else
+                            local start = {CURRX,CURRY,CURRZ}       
+                            move(1)
+                            dfsMiner(start)
+                        end
+                    else
+                        local start = {CURRX,CURRY,CURRZ}       
+                        move(1)
+                        dfsMiner(start)        
+                    end
+                else
+                    local start = {CURRX,CURRY,CURRZ}
+                    moveVertical(-1)
+                    dfsMiner(start)          
+                end
+            else
+                local start = {CURRX,CURRY,CURRZ}
+                moveVertical(1)
+                dfsMiner(start)
+            end
+        else
+            local start = {CURRX,CURRY,CURRZ}
+            move(1)
+            dfsMiner(start)
+        end
+    else
+        local start = {CURRX,CURRY,CURRZ}
+        move(1)
+        dfsMiner(start)
+    end
+end
+
+function isOre(data)
+    local name=data.name
+    name=string.lower( name )
+    if string.match( name,"ore",-3 ) then
+        return true
+    else
+        return false
+    end
+end
+
+function smartTunnel(heading,dist)
+    for i=1,dist do
+        makeHeading(heading)
+        table.insert( VISITED,{CURRX,CURRY,CURRZ})
+        if inspect("U") ~= true  then
+            if inspect("D") ~= true then
+                if inspect("L") ~= true then
+                    turnRight()
+                    if inspect("R") ~= true then
+                        turnLeft()
+                        move(1)
+                    else
+                        local initial_pos={CURRX,CURRY,CURRZ}
+                        move(1)
+                        dfsMiner({CURRX,CURRY,CURRZ})
+                        moveTo(initial_pos[1],initial_pos[2],initial_pos[3])
+                    end
+                else
+                    local initial_pos={CURRX,CURRY,CURRZ}
+                    move(1)
+                    dfsMiner({CURRX,CURRY,CURRZ})
+                    moveTo(initial_pos[1],initial_pos[2],initial_pos[3])           
+                end
+            else
+                local initial_pos={CURRX,CURRY,CURRZ}
+                moveVertical(-1)
+                dfsMiner({CURRX,CURRY,CURRZ})
+                moveTo(initial_pos[1],initial_pos[2],initial_pos[3])
+            end
+        else
+            local initial_pos={CURRX,CURRY,CURRZ}
+            moveVertical(1)
+            dfsMiner({CURRX,CURRY,CURRZ})
+            moveTo(initial_pos[1],initial_pos[2],initial_pos[3])   
+        end
+    end
+end
+
+
 function selfRemove()
     moveTo(TUNNEL_START[1],TUNNEL_START[2],TUNNEL_START[3])
     moveTo(TUNNEL_END[1],TUNNEL_END[2],TUNNEL_END[3])
@@ -195,14 +322,11 @@ function mine( x1,y1,z1,x2,y2,z2 )
 
     --how much to dig in each direction
     local xdist,ydist,zdist=math.abs(x1-x2),math.abs(y1-y2),math.abs(z1-z2)
-    for i =0 , ydist do
-        for j=0 , xdist do
-            for k=1 , zdist do
-                turtle.dig()
-                forward()
-            end
-            if j~= xdist then 
-                if j%2==1 then
+    for i = 0 , ydist do
+        for j=i , xdist + i do
+            move(zdist)
+            if j~= xdist + i then 
+                if (j+(2*i))%2==1 then
                     turnRight()
                     turtle.dig()
                     forward()
@@ -263,6 +387,9 @@ while true do -- puts turtle into a waitloop for a message
             moveTo(tonumber(command[2]),tonumber(command[3]),tonumber(command[4]))
         elseif command[1]=="mine" then
             mine(tonumber(command[2]),tonumber(command[3]),tonumber(command[4]),tonumber(command[5]),tonumber(command[6]),tonumber(command[7]))
+        elseif command[1]=="branch" then
+            moveTo(tonumber(command[2]),tonumber(command[3]),tonumber(command[4]))
+            smartTunnel(tonumber(command[5]),tonumber(command[6]))
         elseif command[1]=="remove" then
             selfRemove()
         end

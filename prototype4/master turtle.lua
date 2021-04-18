@@ -31,6 +31,7 @@ end
 function removeTurtle(id)
     turtle.dig()
     table.remove(network, tablefind(network, id))    
+    turtle.dropUp()
 end
 
 function max(t, fn)
